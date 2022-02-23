@@ -1,0 +1,61 @@
+@model IEnumerable<Movies.Models.MovieModel>
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+    @{
+        ViewData["Title"] = "Index";
+    }
+
+    <h1>Index</h1>
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.MovieName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MovieDetails)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MovieActors)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TimesWatched)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MovieName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MovieDetails)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MovieActors)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimesWatched)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                    @if ((await AuthorizationService.AuthorizeAsync(User, "RequireUserJose")).Succeeded)
+                    {
+                        <td>
+                            <a asp-action="Watching" asp-route-id="@item.Id" style="background-color:red; color: white; padding: 5px;" Watching> Watch </a>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
